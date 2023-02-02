@@ -8,7 +8,7 @@ import fax.play.generator.Matrix;
 
 public class MatrixTest {
 
-   final Matrix matrix = new Matrix(5, 10, new Random(739));
+   final Matrix matrix = new Matrix(5, 100, new Random(739));
 
    @Test
    public void test() {

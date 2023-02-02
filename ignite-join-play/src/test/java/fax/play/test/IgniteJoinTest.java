@@ -24,18 +24,25 @@ import fax.play.test.util.ResultSetDumper;
 public class IgniteJoinTest {
 
    static final Logger LOG = LoggerFactory.getLogger(IgniteJoinTest.class);
-   static final int SIZE = 10;
+   static final int SIZE = 1_000;
    final SQLAccess sqlAccess = new SQLAccess();
 
    IgniteClient client;
 
    @Test
-   public void test() {
+   public void test() throws Exception {
+      long start;
+      long end;
+
       try (Session ses = client.sql().createSession()) {
-         try (ResultSet rs = ses.execute(null, "SELECT * FROM TABLE_2S t order by t.id")) {
+         start = System.currentTimeMillis();
+         try (ResultSet rs = ses.execute(null, sqlAccess.query(), 2)) {
+            end = System.currentTimeMillis();
             LOG.info(ResultSetDumper.dump(rs));
          }
       }
+
+      LOG.info("time -> " + (end - start) + " ms");
    }
 
    @BeforeAll
@@ -80,9 +87,9 @@ public class IgniteJoinTest {
             }
          }
 
-         for (int table = 1; table < commands.length; table++){
+         for (int table = 1; table < commands.length; table++) {
             try (Statement stmt = client.sql().createStatement(commands[table])) {
-               for (int i=0; i<SIZE; i++) {
+               for (int i = 0; i < SIZE; i++) {
                   try (ResultSet rs = ses.execute(null, stmt, matrix.get(0, i), matrix.get(table, i))) {
                      rowsAdded += rs.affectedRows();
                   }

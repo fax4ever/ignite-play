@@ -17,4 +17,10 @@ public class SQLAccess {
          return new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8).split("\n\n");
       }
    }
+
+   public String query() throws IOException {
+      try (InputStream resourceAsStream = SQLAccess.class.getClassLoader().getResourceAsStream("query.sql")) {
+         return new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8);
+      }
+   }
 }

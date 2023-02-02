@@ -22,7 +22,7 @@ public class Matrix {
 
       for (int row = 1; row < rows; row++) {
          for (int i = 0; i < columns; i++) {
-            data[row][i] = data[row-1][rand.nextInt(columns)];
+            data[row][i] = data[row-1][rand.nextInt(40)];
          }
       }
    }
