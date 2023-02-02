@@ -47,7 +47,7 @@ mvn clean install
 ### Using beta1
 
 ``` shell script
-mvn clean install -P
+mvn clean install -Pbeta1
 ```
 
 

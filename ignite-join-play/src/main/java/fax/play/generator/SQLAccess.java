@@ -17,10 +17,4 @@ public class SQLAccess {
          return new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8).split("\n\n");
       }
    }
-
-   public String[] deletes() throws IOException {
-      try (InputStream resourceAsStream = SQLAccess.class.getClassLoader().getResourceAsStream("delete.sql")) {
-         return new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8).split("\n\n");
-      }
-   }
 }

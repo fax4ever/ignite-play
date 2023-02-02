@@ -8,38 +8,32 @@ import java.util.Random;
 import org.apache.ignite.client.IgniteClient;
 import org.apache.ignite.sql.ResultSet;
 import org.apache.ignite.sql.Session;
-import org.apache.ignite.sql.SqlRow;
 import org.apache.ignite.sql.Statement;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fax.play.generator.Matrix;
 import fax.play.generator.SQLAccess;
+import fax.play.test.util.ResultSetDumper;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class IgniteJoinTest {
 
+   static final Logger LOG = LoggerFactory.getLogger(IgniteJoinTest.class);
    static final int SIZE = 10;
    final SQLAccess sqlAccess = new SQLAccess();
 
    IgniteClient client;
 
    @Test
-   public void test() throws Exception {
+   public void test() {
       try (Session ses = client.sql().createSession()) {
-         try (ResultSet rs = ses.execute(null, "SELECT * FROM TABLE_1S")) {
-            while (rs.hasNext()) {
-               SqlRow row = rs.next();
-
-               System.out.println(row.intValue(0));
-
-//               System.out.println("    "
-//                     + row.stringValue(1) + ", "
-//                     + row.stringValue(2) + ", "
-//                     + row.stringValue(3));
-            }
+         try (ResultSet rs = ses.execute(null, "SELECT * FROM TABLE_2S t order by t.id")) {
+            LOG.info(ResultSetDumper.dump(rs));
          }
       }
    }
@@ -64,9 +58,6 @@ public class IgniteJoinTest {
    private void schemaAndDeletes() throws IOException {
       try (Session ses = client.sql().createSession()) {
          for (String command : sqlAccess.schema()) {
-            ses.execute(null, command).close();
-         }
-         for (String command : sqlAccess.deletes()) {
             ses.execute(null, command).close();
          }
       }
